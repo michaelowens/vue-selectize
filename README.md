@@ -9,10 +9,8 @@ A Vue.js directive for selectize.js.
 
 # Installation
 
-(soon)
-
 ```shell
-$ npm install vue-selectize
+$ npm install vue-selectize --save
 ```
 
 # Usage
