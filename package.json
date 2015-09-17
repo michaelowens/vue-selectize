@@ -1,7 +1,11 @@
 {
   "name": "vue-selectize",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A Vue.js directive for selectize.js",
+  "repository": "michaelowens/vue-selectize",
+  "bugs": {
+    "url" : "https://github.com/michaelowens/vue-selectize/issues"
+  },
   "main": "./dist/vue-selectize.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

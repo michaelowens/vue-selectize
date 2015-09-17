@@ -1,5 +1,5 @@
 /**
- * vue-selectize v0.0.2
+ * vue-selectize v0.0.3
  * 
  * Copyright (c)  Michael Owens, contributors.
  * Licensed under the ISC license.
