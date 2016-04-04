@@ -28,9 +28,9 @@
                 // 2. Set in Javascript
                 // 3. Set on the select element
                 var params = {}
-                params = Vue.util.mergeOptions(params, settings)
-                params = Vue.util.mergeOptions(params, vueSelectize.settings)
-                params = Vue.util.mergeOptions(params, this.params.settings)
+                params = Vue.util.mergeData(params, settings)
+                params = Vue.util.mergeData(params, vueSelectize.settings)
+                params = Vue.util.mergeData(params, this.params.settings)
                 if (vueSelectize.options.length > 0) {
                     params.options = vueSelectize.options
                 }
