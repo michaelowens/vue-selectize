@@ -4,54 +4,102 @@
  * Copyright (c)  Michael Owens, contributors.
  * Licensed under the ISC license.
  */
-;(function(root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    define([], factory);
-  } else if (typeof exports === 'object') {
-    module.exports = factory();
-  } else {
-    root.VueSelectize = factory();
-  }
-}(this, function() {
+;(function () {
+    var vueSelectize = {};
+    var selectize = typeof require === 'function'
+        ? require('selectize')
+        : window.selectize
 
-function install(Vue, options) {
+    if (!selectize) {
+        throw new Error('[vue-selectize] cannot locate selectize.')
+    }
 
-    Vue.directive('selectize', {
-        twoWay: true,
-        priority: 1000,
+    vueSelectize.settings = {}
+    vueSelectize.options = []
 
-        params: [
-            'options', 'settings'
-        ],
+    vueSelectize.install = function(Vue, settings) {
 
-        bind: function () {
-            var self = this
-            var params = this.params.settings;
-            if (this.params.options) {
-                params.options = this.params.options;
-            }
-            $(this.el)
-                .selectize(params)
-                .on('change', function (e) {
-                    // if multi-select enabled, value is a delimited string of selectedOptions values
-                    if (this.selectize.settings.mode == 'multi'){
-                        var values = [];
-                        for (var i=0;i<this.selectedOptions.length;i++){
-                            values.push(this.selectedOptions[i].value);
+        Vue.directive('selectize', {
+            twoWay: true,
+            priority: 1000,
+
+            params: [
+                'options', 'settings'
+            ],
+
+            bind: function () {
+                var self = this
+                // Settings are set in the following order with the latter values overriding the former:
+                // 1. Passed with Vue.use
+                // 2. Set in Javascript
+                // 3. Set on the select element
+                var params = settings
+                params.assign(vueSelectize.settings)
+                params.assign(this.params.settings)
+                if (vueSelectize.options.length > 0) {
+                    params.options = vueSelectize.options
+                }
+                // Options set on select element override those set in Javascript code
+                if (this.params.options) {
+                    params.options = this.params.options
+                }
+                $(this.el)
+                    .selectize(params)
+                    .on('change', function (e) {
+                        // if multi-select enabled, value is a delimited string of selectedOptions values
+                        if (this.selectize.settings.mode == 'multi') {
+                            var values = [];
+                            for (var i = 0; i < this.selectedOptions.length; i++) {
+                                values.push(this.selectedOptions[i].value)
+                            }
+                            self.set(values.join(this.selectize.settings.delimiter))
+                        } else {
+                            self.set(this.value)
                         }
-                        self.set(values.join(this.selectize.settings.delimiter));
-                    } else {
-                        self.set(this.value);
-                    }
-                })
-        },
-        update: function (value) {
-            $(this.el).val(value).trigger('change')
-        },
-        unbind: function () {
-            $(this.el).off().selectize('destroy')
-        }
-    });
+                    })
+            },
+            update: function (value) {
+                $(this.el).val(value).trigger('change')
+            },
+            unbind: function () {
+                $(this.el).off().selectize('destroy')
+            }
+        });
 
-}
-}));
+    }
+
+    // Polyfill for Object.assign
+    if (typeof Object.assign != 'function') {
+        (function () {
+            Object.assign = function (target) {
+                'use strict';
+                if (target === undefined || target === null) {
+                    throw new TypeError('Cannot convert undefined or null to object');
+                }
+
+                var output = Object(target);
+                for (var index = 1; index < arguments.length; index++) {
+                    var source = arguments[index];
+                    if (source !== undefined && source !== null) {
+                        for (var nextKey in source) {
+                            if (source.hasOwnProperty(nextKey)) {
+                                output[nextKey] = source[nextKey];
+                            }
+                        }
+                    }
+                }
+                return output;
+            };
+        })();
+    }
+
+    if (typeof exports == "object") {
+        module.exports = vueSelectize
+    } else if (typeof define == "function" && define.amd) {
+        define([], function(){ return vueSelectize })
+    } else if (window.Vue) {
+        window.VueSelectize = vueSelectize
+        Vue.use(vueSelectize)
+    }
+
+})()
