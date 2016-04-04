@@ -1,10 +1,10 @@
 {
   "name": "vue-selectize",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "A Vue.js directive for selectize.js",
   "repository": "michaelowens/vue-selectize",
   "bugs": {
-    "url" : "https://github.com/michaelowens/vue-selectize/issues"
+    "url": "https://github.com/michaelowens/vue-selectize/issues"
   },
   "main": "./dist/vue-selectize.js",
   "scripts": {
@@ -12,6 +12,7 @@
   },
   "keywords": [
     "vue",
+    "vuejs",
     "selectize",
     "dropdown",
     "select"
@@ -25,5 +26,9 @@
     "gulp-header": "^1.7.1",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.4.1"
+  },
+  "dependencies": {
+    "selectize": "^0.12.1",
+    "vue": "^1.0.16"
   }
 }
