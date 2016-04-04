@@ -4,99 +4,39 @@
  * Copyright (c)  Michael Owens, contributors.
  * Licensed under the ISC license.
  */
-(function(root, factory){
-    var selectize = {
-        twoWay: true,
+Vue.directive('selectize', {
+    twoWay: true,
+    priority: 1000,
 
-        selectizeSettings: {},
+    params: [
+        'options', 'settings'
+    ],
 
-        bind: function () {
-            var optionsExpression = this.el.getAttribute('options'),
-                settingsExpression = this.el.getAttribute('settings'),
-                self = this,
-                optionsData;
-
-            if (optionsExpression) {
-                optionsData = this.vm.$eval(optionsExpression);
-                this.vm.$watch(optionsExpression, this.optionsChange.bind(this));
-            }
-
-            this.selectizeSettings = {
-                options: optionsData,
-                onChange: function (value) {
-                    self.set(value);
-                    self.nativeEvent('change').call();
-                },
-                onFocus: this.nativeEvent('focus').bind(this),
-                onBlur: this.nativeEvent('blur').bind(this)
-            };
-
-            if (settingsExpression) {
-                var userSettings = this.vm.$eval(settingsExpression);
-                this.selectizeSettings = $.extend({}, this.selectizeSettings, userSettings);
-                this.vm.$watch(settingsExpression, this.settingsChange.bind(this), {
-                    deep: true
-                });
-            }
-
-            $(this.el).selectize(this.selectizeSettings);
-        },
-
-        nativeEvent: function (eventName) {
-            var self = this;
-            return function () {
-                var event = new Event(eventName);
-                self.el.dispatchEvent(event);
-            };
-        },
-
-        optionsChange: function (options) {
-            var selectize = this.el.selectize,
-                value = this.el.selectize.getValue();
-
-            selectize.clearOptions();
-            selectize.addOption(options);
-            selectize.refreshOptions(false);
-            selectize.setValue(value);
-        },
-
-        settingsChange: function (settings) {
-            var value = this.el.selectize.getValue();
-
-            this.selectizeSettings = $.extend({}, this.selectizeSettings, settings);
-
-            this.el.selectize.destroy();
-            $(this.el).selectize(this.selectizeSettings);
-            this.el.selectize.setValue(value);
-        },
-
-        update: function (value) {
-            this.el.selectize.setValue(value);
-        },
-
-        unbind: function () {
-            this.el.selectize.destroy();
+    bind: function () {
+        var self = this
+        var params = this.params.settings;
+        if (this.params.options) {
+            params.options = this.params.options;
         }
-    };
-
-    if (typeof exports === 'object' && typeof module === 'object') {
-        module.exports = factory();
+        $(this.el)
+            .selectize(params)
+            .on('change', function (e) {
+                // if multi-select enabled, value is a delimited string of selectedOptions values
+                if (this.selectize.settings.mode == 'multi'){
+                    var values = [];
+                    for (var i=0;i<this.selectedOptions.length;i++){
+                        values.push(this.selectedOptions[i].value);
+                    }
+                    self.set(values.join(this.selectize.settings.delimiter));
+                } else {
+                    self.set(this.value);
+                }
+            })
+    },
+    update: function (value) {
+        $(this.el).val(value).trigger('change')
+    },
+    unbind: function () {
+        $(this.el).off().selectize('destroy')
     }
-    else if (typeof define === 'function' && define.amd) {
-        define([], factory);
-    }
-    else if (typeof exports === 'object') {
-        exports['vue-selectize'] = factory();
-    }
-    else {
-        root['vue-selectize'] = factory();
-    }
-
-    function factory() {
-        return function (Vue, options) {
-            options = options || {};
-            var directiveName = options.directive || 'selectize';
-            Vue.directive(directiveName, selectize);
-        };
-    }
-})(this);
+});
