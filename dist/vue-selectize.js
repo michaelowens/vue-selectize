@@ -1,9 +1,18 @@
 /**
- * vue-selectize v0.0.3
+ * vue-selectize v1.0.0
  * 
  * Copyright (c)  Michael Owens, contributors.
  * Licensed under the ISC license.
  */
+;(function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define([], factory);
+  } else if (typeof exports === 'object') {
+    module.exports = factory();
+  } else {
+    root.VueSelectize = factory();
+  }
+}(this, function() {
 Vue.directive('selectize', {
     twoWay: true,
     priority: 1000,
@@ -40,3 +49,6 @@ Vue.directive('selectize', {
         $(this.el).off().selectize('destroy')
     }
 });
+
+return VueSelectize;
+}));

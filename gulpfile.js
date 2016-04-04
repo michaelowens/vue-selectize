@@ -1,4 +1,5 @@
 var gulp = require('gulp'),
+    umd = require('gulp-umd'),
     uglify = require('gulp-uglify'),
     header = require('gulp-header'),
     rename = require('gulp-rename'),
@@ -13,6 +14,14 @@ gulp.task('clean', function () {
 
 gulp.task('default', ['clean'], function () {
     return gulp.src('src/*.js')
+        .pipe(umd({
+            exports: function(file) {
+                return 'VueSelectize';
+            },
+            namespace: function(file) {
+                return 'VueSelectize';
+            }
+        }))
         .pipe(header(bannerTemplate, { pkg : pkg } ))
         .pipe(gulp.dest('dist'))
         .pipe(uglify())
