@@ -54,6 +54,4 @@ function install(Vue, options) {
     });
 
 }
-
-return VueSelectize;
 }));
