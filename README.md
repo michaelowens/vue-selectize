@@ -1,11 +1,13 @@
 # vue-selectize
 
-A Vue.js directive for selectize.js.
+A Vue.js directive for selectize.js. 
 
 # Requirements
 
-- Vue.js ^`0.12.0`
-- Selectize.js (and its dependencies)
+- Vue.js ^`1.0.16`
+- Selectize.js ^`0.12.1` (and its dependencies)
+
+For vue-selectize compatible with Vue.js v0.*, see [link to earlier version goes here].
 
 # Installation
 
@@ -33,7 +35,13 @@ Vue.use(window['vue-selectize']);
 After installing the plugin with `Vue.use` you can use the `v-selectize` directive.
 
 ```html
-<select v-selectize="selected" options="items"></select>
+<!-- With data-binding and a default option -->
+<select v-selectize="selected"
+        v-model="selected"
+        :options="options"
+        :settings="customSettings">
+    <option value="">-- Select --</option>
+</select>
 
 <!-- or -->
 
@@ -45,10 +53,42 @@ After installing the plugin with `Vue.use` you can use the `v-selectize` directi
 
 <!-- or -->
 
-<select v-selectize="selected" options="items" settings="customSettings">
+<select v-selectize="selected" options="options" settings="customSettings">
 </select>
 ```
 
-- `selected` is the selected value
-- `items` is an array of the initial available options
-- `customSettings` is an object with settings that will be passed to selectize
+- `selected` is the selected value. If maxItems is > 1, it will be a delimited string of values. Otherwise it's a single value.
+- `options` is an array of the initial available options
+- `customSettings` is an object with settings that will be passed to selectize. 
+See https://github.com/selectize/selectize.js/blob/master/docs/usage.md#options for available options
+
+## Example
+
+```html
+<select v-selectize="selectedItems"
+        v-model="selectedItems"
+        :options="options"
+        :settings="customSettings">
+    <option value="">-- Select --</option>
+</select>
+```
+
+```javascript
+var vm = new Vue({
+    el: 'body',
+    data: {
+        selectedItems: '',
+        options: [
+            {code: 'en', name: 'English'},
+            {code: 'fr', name: 'French'},
+            {code: 'pt', name: 'Portuguese'}
+        ],
+        customSettings: {
+            valueField: 'code',
+            labelField: 'name',
+            maxItems: 3,
+            plugins: ['remove_button']
+        }
+    }
+});
+```
