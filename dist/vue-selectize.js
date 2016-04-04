@@ -34,8 +34,8 @@
                 // 2. Set in Javascript
                 // 3. Set on the select element
                 var params = {}
-                params = Vue.util.mergeData(params, settings)
-                params = Vue.util.mergeData(params, vueSelectize.settings)
+                params = mergeData(params, settings)
+                params = Vue.util.mergeOptions(params, vueSelectize.settings)
                 params = Vue.util.mergeData(params, this.params.settings)
                 if (vueSelectize.options.length > 0) {
                     params.options = vueSelectize.options
@@ -69,6 +69,20 @@
 
     }
 
+    function mergeData(to, from) {
+        var key, toVal, fromVal;
+        for (key in from) {
+            toVal = to[key];
+            fromVal = from[key];
+            if (!Vue.util.hasOwn(to, key)) {
+                Vue.util.set(to, key, fromVal);
+            } else if (Vue.util.isObject(toVal) && Vue.util.isObject(fromVal)) {
+                mergeData(toVal, fromVal);
+            }
+        }
+        return to;
+    }
+    
     if (typeof exports == "object") {
         module.exports = vueSelectize
     } else if (typeof define == "function" && define.amd) {
