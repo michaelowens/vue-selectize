@@ -50,5 +50,5 @@ Vue.directive('selectize', {
     }
 });
 
-return VueSelectize;
+//return VueSelectize;
 }));
