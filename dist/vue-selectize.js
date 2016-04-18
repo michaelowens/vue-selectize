@@ -1,5 +1,5 @@
 /**
- * vue-selectize v1.0.0
+ * vue-selectize v1.0.1
  * 
  * Copyright (c)  Michael Owens, contributors.
  * Licensed under the ISC license.
@@ -8,7 +8,7 @@
     var VueSelectize = {};
     var selectize = typeof require === 'function'
         ? require('selectize')
-        : window.selectize
+        : window.Selectize
 
     if (!selectize) {
         throw new Error('[vue-selectize] cannot locate selectize.')

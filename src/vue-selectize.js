@@ -2,7 +2,7 @@
     var VueSelectize = {};
     var selectize = typeof require === 'function'
         ? require('selectize')
-        : window.selectize
+        : window.Selectize
 
     if (!selectize) {
         throw new Error('[vue-selectize] cannot locate selectize.')
