@@ -39,7 +39,16 @@
         nativeEvent: function (eventName) {
             var self = this;
             return function () {
-                var event = new Event(eventName);
+                let event = null;
+                try {
+                    event = new Event(eventName);
+                }
+                catch (error) {
+                    event = document.createEvent("Event");
+                    let doesnt_bubble = false;
+                    let isnt_cancelable = false;
+                    event.initEvent(eventName, doesnt_bubble, isnt_cancelable);
+                }
                 self.el.dispatchEvent(event);
             };
         },
