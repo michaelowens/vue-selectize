@@ -1,6 +1,6 @@
 {
   "name": "vue-selectize",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A Vue.js directive for selectize.js",
   "repository": "michaelowens/vue-selectize",
   "bugs": {
@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "selectize": "^0.12.1",
-    "vue": "^1.0.16"
+    "vue": "^1.0.16",
+    "jquery": "3.*"
   }
 }
