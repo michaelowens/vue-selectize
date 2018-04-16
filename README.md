@@ -1,3 +1,5 @@
+# DEPRECATED: Use vue2-selectize[https://github.com/rhyek/vue2-selectize] instead.
+
 # vue-selectize
 
 A Vue.js directive for selectize.js. 
